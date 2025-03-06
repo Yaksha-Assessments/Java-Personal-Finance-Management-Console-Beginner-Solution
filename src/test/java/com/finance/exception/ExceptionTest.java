@@ -6,7 +6,6 @@ import static com.finance.testutils.TestUtils.testReport;
 import static com.finance.testutils.TestUtils.yakshaAssert;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +36,8 @@ class TransactionManagerExceptionTest {
 			transactionManager.addExpense(-500.0, "Invalid Amount Expense", "Food");
 			yakshaAssert(currentTest(), false, exceptionTestFile);
 		} catch (InvalidAmountException ex) {
-			Pattern pattern = Pattern.compile("(?i)amount\\s*must\\s*be\\s*positive\\.*");
-			yakshaAssert(currentTest(), pattern.matcher(ex.getMessage()).find(), exceptionTestFile);
+			yakshaAssert(currentTest(), ex.getMessage().contains("Expense amount must be positive."),
+					exceptionTestFile);
 		}
 	}
 
@@ -52,8 +51,7 @@ class TransactionManagerExceptionTest {
 			transactionManager.updateTransaction(0, -100.0, "Invalid Update", "Food");
 			yakshaAssert(currentTest(), false, exceptionTestFile);
 		} catch (InvalidAmountException ex) {
-			Pattern pattern = Pattern.compile("(?i)amount\\s*must\\s*be\\s*positive\\.*");
-			yakshaAssert(currentTest(), pattern.matcher(ex.getMessage()).find(), exceptionTestFile);
+			yakshaAssert(currentTest(), ex.getMessage().contains("Amount must be positive."), exceptionTestFile);
 		} catch (Exception ex) {
 			yakshaAssert(currentTest(), false, exceptionTestFile);
 		}
@@ -68,8 +66,8 @@ class TransactionManagerExceptionTest {
 			yakshaAssert(currentTest(), false, exceptionTestFile);
 		} catch (IndexOutOfBoundsException ex) {
 			System.out.println(ex.getMessage());
-			Pattern pattern = Pattern.compile("(?i)transaction\\s*not\\s*found\\s*at\\s*index\\s*:\\s*-1");
-			yakshaAssert(currentTest(), pattern.matcher(ex.getMessage()).find(), exceptionTestFile);
+			yakshaAssert(currentTest(), ex.getMessage().contains("Transaction not found at index: "),
+					exceptionTestFile);
 		} catch (InvalidAmountException e) {
 			yakshaAssert(currentTest(), false, exceptionTestFile);
 		}
